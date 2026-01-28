@@ -105,8 +105,59 @@ function sendBtnClick() {
 ## Bitácora de aplicación 
 
 ### Actividad 5
+```
+let port;
+let connectBtn;
+
+function setup() {
+    createCanvas(400, 400);
+    background(220);
+    x=width/2
+    port = createSerial();
+    connectBtn = createButton('Connect to micro:bit');
+    connectBtn.position(80, 300);
+    connectBtn.mousePressed(connectBtnClick);
+    fill('white');
+    ellipse(width / 2, height / 2, 100, 100);
+}
+
+function draw() {
+
+    if(port.availableBytes() > 0){
+        let dataRx = port.read(1);
+        if(dataRx == 'A'){
+            x=x-10;
+        }
+        else if(dataRx == 'B'){
+           x=x+10;
+        }
+        else{
+            x=x
+        }
+        background(220);
+        ellipse(x, height / 2, 100, 100);
+    }
+
+
+    if (!port.opened()) {
+        connectBtn.html('Connect to micro:bit');
+    }
+    else {
+        connectBtn.html('Disconnect');
+    }
+}
+
+function connectBtnClick() {
+    if (!port.opened()) {
+        port.open('MicroPython', 115200);
+    } else {
+        port.close();
+    }
+}
+```
 
 ## Bitácora de reflexión
+
 
 
 
