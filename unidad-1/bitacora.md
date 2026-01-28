@@ -98,10 +98,16 @@ function sendBtnClick() {
     port.write('h');
 }
 ```
+
+### Actividad 4
+-
+
 ## Bitácora de aplicación 
 
+### Actividad 5
 
 ## Bitácora de reflexión
+
 
 
 
