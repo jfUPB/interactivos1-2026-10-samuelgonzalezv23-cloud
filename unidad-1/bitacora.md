@@ -48,6 +48,20 @@ while True:                                      (Un loop que se repetirá indef
 
 ### Actividad 5
 ```
+from microbit import *
+
+uart.init(baudrate=115200)
+display.show(Image.BUTTERFLY)
+
+while True:
+    if button_a.is_pressed():
+        uart.write('A')
+        sleep(500)
+    if button_b.is_pressed():
+        uart.write('B')
+        sleep(500)
+```
+```
 let port;
 let connectBtn;
 
@@ -99,6 +113,7 @@ function connectBtnClick() {
 ```
 
 ## Bitácora de reflexión
+
 
 
 
