@@ -61,6 +61,10 @@ while True:
         uart.write('B')
         sleep(500)
 ```
+Tengo que colocar esta librería en index.html en p5.js
+```
+<script src="https://unpkg.com/@gohai/p5.webserial@^1/libraries/p5.webserial.js"></script>
+```
 ```
 let port;
 let connectBtn;
@@ -113,6 +117,7 @@ function connectBtnClick() {
 ```
 
 ## Bitácora de reflexión
+
 
 
 
