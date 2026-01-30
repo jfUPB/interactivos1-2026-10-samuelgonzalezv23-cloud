@@ -120,6 +120,77 @@ function connectBtnClick() {
 
 ### Actividad 6
 
+from microbit import *
+
+uart.init(baudrate=115200)
+
+while True:
+La parte del micro:bit
+```
+from microbit import *               (importa las funciones de la librería de micro:bit
+
+uart.init(baudrate=115200)           (Inicializa la conexión con el dispositivo con un rate estándar de comunicación) 
+                                    
+while True:                          (un bucle que se ejecuta indefinidamente)
+                                      
+    if button_a.is_pressed():        (Si el botón a está siendo oprimido)
+        uart.write('A')              (Le envía un byte con una letra "A" al dispositivo conectado)
+    else:                            (en caso de que el botón a no esté siendo oprimido)
+        uart.write('N')              (Le envía un byte con una letra "A" al dispositivo conectado)
+
+    sleep(100)                       (Pausa la ejecución por 1/10 de segundo)
+```
+La parte del p5.js
+```
+  let port;
+  let connectBtn;
+  let connectionInitialized = false;
+
+  function setup() {
+    createCanvas(400, 400);
+    background(220);
+    port = createSerial();
+    connectBtn = createButton("Connect to micro:bit");
+    connectBtn.position(80, 300);
+    connectBtn.mousePressed(connectBtnClick);
+  }
+
+  function draw() {
+    background(220);
+
+    if (port.opened() && !connectionInitialized) {
+      port.clear();
+      connectionInitialized = true;
+    }
+
+    if (port.availableBytes() > 0) {
+      let dataRx = port.read(1);
+      if (dataRx == "A") {
+        fill("red");
+      } else if (dataRx == "N") {
+        fill("green");
+      }
+    }
+
+    rectMode(CENTER);
+    rect(width / 2, height / 2, 50, 50);
+
+    if (!port.opened()) {
+      connectBtn.html("Connect to micro:bit");
+    } else {
+      connectBtn.html("Disconnect");
+    }
+  }
+
+  function connectBtnClick() {
+    if (!port.opened()) {
+      port.open("MicroPython", 115200);
+      connectionInitialized = false;
+    } else {
+      port.close();
+    }
+  }
+```
 
 
 
