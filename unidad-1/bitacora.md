@@ -42,7 +42,7 @@ while True:                                      (Un loop que se repetirá indef
 -----------------------------------------------------------------------------------------------------------------------------
 
 ### Actividad 4
--
+El programa no funciona correctamente con was_pressed porque was_pressed solo se vuelve verdadera en el frame en el que el botón es presionado y cabe la posibilidad de que el bit de información se pierda y no sea leído a tiempo antes de que vuelva a ser falso; esto resulta en la posibilidad de que presionar el botón no resulte en el efecto esperado dentro de p5.js
 
 ## Bitácora de aplicación 
 
@@ -117,6 +117,9 @@ function connectBtnClick() {
 ```
 
 ## Bitácora de reflexión
+
+### Actividad 6
+
 
 
 
