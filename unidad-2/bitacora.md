@@ -2,6 +2,12 @@
 
 ## Bitácora de proceso de aprendizaje
 
+### Actividad 1
+Los estados de ese código en partícular son: 
+-WaitInOn
+-WaitInOff
+
+
 
 ## Bitácora de aplicación 
 ```
@@ -146,3 +152,4 @@ while True:
 
 
 ## Bitácora de reflexión
+
