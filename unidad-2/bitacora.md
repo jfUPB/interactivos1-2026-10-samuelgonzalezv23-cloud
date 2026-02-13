@@ -10,6 +10,8 @@ Los estados de ese código en partícular son:
 
 
 ## Bitácora de aplicación 
+<img width="255" height="633" alt="image" src="https://github.com/user-attachments/assets/f7d3a569-1e0a-4727-8eeb-428340c02b3a" />
+
 ```
 from microbit import *
 import utime
@@ -56,11 +58,11 @@ class Reloj:
         
     def createTimer(self,event,duration):   #crea un timer con los argumentos "evento" y "duración"
         t = Timer(self, event, duration)
-        self.timers.append(t)
-        return t
+        self.timers.append(t)                #Guarda el timer en una lista
+        return t                          #Devuelve el timer creado llamado t al owner del timer
 
-    def post_event(self, ev):
-        self.event_queue.append(ev)
+    def post_event(self, ev):                        #Crea unna función para postear evento con los argumentos dueño (siempre self) y evento
+        self.event_queue.append(ev)                #añade el evento a la lista
 
     def update(self):
         # 1. Actualizar todos los timers internos automáticamente
@@ -78,13 +80,13 @@ class Reloj:
         self.estado_actual = nuevo_estado
         self.estado_actual("ENTRY")
 
-    def dibujar_pixels(self):
-        display.clear()
-        total = self.segundos
+    def dibujar_pixels(self):    #función para dibujar los pixeles
+        display.clear()            #limpia los pixeles
+        total = self.segundos       
 
         for i in range(total):
-            x = i % 5
-            y = i // 5
+            x = i % 5      #operación Módulo 5
+            y = i // 5      #división entera sobre 5
             display.set_pixel(x, y, 9)
 
     def apagar_siguiente(self):
@@ -132,6 +134,9 @@ class Reloj:
     def estado_muerto(self, ev):
         if ev == "ENTRY":
                 display.show(Image.SKULL) 
+        if ev == "A":
+           self.transicion_a(self.estado_setup)
+        
             
     
 reloj=Reloj()
@@ -152,4 +157,5 @@ while True:
 
 
 ## Bitácora de reflexión
+
 
