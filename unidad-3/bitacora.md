@@ -5,9 +5,371 @@
 ###Actividad 1
 
 
+### Actividad 3
+fsm.js
+```
+const ENTRY = "ENTRY";
+const EXIT = "EXIT";
 
+class Timer {
+  constructor(owner, eventToPost, duration) {
+    this.owner = owner;
+    this.event = eventToPost;
+    this.duration = duration;
+    this.startTime = 0;
+    this.active = false;
+  }
+
+  start(newDuration = null) {
+    if (newDuration !== null) this.duration = newDuration;
+    this.startTime = millis();
+    this.active = true;
+  }
+
+  stop() {
+    this.active = false;
+  }
+
+  update() {
+    if (this.active && millis() - this.startTime >= this.duration) {
+      this.active = false;
+      this.owner.postEvent(this.event);
+    }
+  }
+}
+
+class FSMTask {
+  constructor() {
+    this.queue = [];
+    this.timers = [];
+    this.state = null;
+  }
+
+  postEvent(ev) {
+    this.queue.push(ev);
+  }
+
+  addTimer(event, duration) {
+    let t = new Timer(this, event, duration);
+    this.timers.push(t);
+    return t;
+  }
+
+  transitionTo(newState) {
+    if (this.state) this.state(EXIT);
+    this.state = newState;
+    this.state(ENTRY);
+  }
+
+  update() {
+    for (let t of this.timers) {
+      t.update();
+    }
+    while (this.queue.length > 0) {
+      let ev = this.queue.shift();
+      if (this.state) this.state(ev);
+    }
+  }
+}
+```
+Sketch.js    (CON FUNCONALIDAD DE MICRO:BIT Y NADA MÁS
+```
+const ENTRY = "ENTRY";
+const EXIT = "EXIT";
+
+class Timer {
+  constructor(owner, eventToPost, duration) {
+    this.owner = owner;
+    this.event = eventToPost;
+    this.duration = duration;
+    this.startTime = 0;
+    this.active = false;
+  }
+
+  start(newDuration = null) {
+    if (newDuration !== null) this.duration = newDuration;
+    this.startTime = millis();
+    this.active = true;
+  }
+
+  stop() {
+    this.active = false;
+  }
+
+  update() {
+    if (this.active && millis() - this.startTime >= this.duration) {
+      this.active = false;
+      this.owner.postEvent(this.event);
+    }
+  }
+}
+
+class FSMTask {
+  constructor() {
+    this.queue = [];
+    this.timers = [];
+    this.state = null;
+  }
+
+  postEvent(ev) {
+    this.queue.push(ev);
+  }
+
+  addTimer(event, duration) {
+    let t = new Timer(this, event, duration);
+    this.timers.push(t);
+    return t;
+  }
+
+  transitionTo(newState) {
+    if (this.state) this.state(EXIT);
+    this.state = newState;
+    this.state(ENTRY);
+  }
+
+  update() {
+    for (let t of this.timers) {
+      t.update();
+    }
+    while (this.queue.length > 0) {
+      let ev = this.queue.shift();
+      if (this.state) this.state(ev);
+    }
+  }
+}
+```
+Sketch.js primer intento de la clave ABA
+```
+const TIMER_LIMITS = {
+  min: 15,
+  max: 25,
+  defaultValue: 20,
+};
+
+let port;
+let connectBtn;
+
+const EVENTS = {
+  DEC: "A",
+  INC: "B",
+  START: "S",
+  TICK: "Timeout",
+};
+
+const UI = {
+  dialSize: 250,
+  ringWeight: 20,
+  bigText: 100,
+  configText: 120,
+  helpText: 18,
+};
+
+
+class Temporizador extends FSMTask {
+  constructor(minValue, maxValue, defaultValue) {
+    super();
+
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.defaultValue = defaultValue;
+    this.configValue = defaultValue;
+    this.totalSeconds = defaultValue;
+    this.remainingSeconds = defaultValue;
+
+    this.myTimer = this.addTimer(EVENTS.TICK, 1000);
+    this.transitionTo(this.estado_config);
+
+  }
+
+  get currentState() {
+    return this.state;
+  }
+
+  estado_config = (ev) => {
+    if (ev === ENTRY) {
+      this.configValue = this.defaultValue;
+    }
+    else if (ev === EVENTS.DEC) {
+      if (this.configValue > this.minValue) this.configValue--;
+    } else if (ev === EVENTS.INC) {
+      if (this.configValue < this.maxValue) this.configValue++;
+    } else if (ev === EVENTS.START) {
+      this.totalSeconds = this.configValue;
+      this.remainingSeconds = this.totalSeconds;
+      this.transitionTo(this.estado_armed);
+    }
+  };
+
+
+  estado_armed = (ev) => {
+    if (ev === ENTRY) {
+      this.myTimer.start();
+    } else if (ev === EVENTS.TICK) {
+      if (this.remainingSeconds > 0) {
+        this.remainingSeconds--;
+        if (this.remainingSeconds === 0) {
+          this.transitionTo(this.estado_timeout);
+        } else {
+          this.myTimer.start();
+        }
+      }
+    }
+     if (this.queue.length === 3){
+       if (
+    this.queue[0] === EVENTS.DEC &&
+    this.queue[1] === EVENTS.INC &&
+    this.queue[2] === EVENTS.DEC
+  ){
+       this.transitionTo(this.estado_config)  
+       }
+
+       }
+
+       
+      else if (ev === EXIT) {
+      this.myTimer.stop();
+    }
+      else if (ev === EVENTS.DEC) {
+      this.myTimer.stop()
+      this.transitionTo(this.estado_paused);
+    }
+
+  };
+
+  estado_paused = (ev) => {
+    if (ev === ENTRY) {
+      let tmp
+      tmp= this.remainingSeconds
+      this.myTimer.stop()
+      this.remainingSeconds=tmp;
+    }
+    else if (ev === EVENTS.DEC) {
+      this.transitionTo(this.estado_armed);
+  }
+    else if(ev === EVENTS.INC) {
+      this.transitionTo(this.estado_armed);
+  }
+  }
+  
+  estado_timeout = (ev) => {
+    if (ev === ENTRY) {
+      console.log("¡TIEMPO!");
+    } else if (ev === EVENTS.DEC) {
+      this.transitionTo(this.estado_config);
+    }
+  }
+}
+
+
+let temporizador;
+const renderer = new Map();
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  temporizador = new Temporizador(
+    TIMER_LIMITS.min,
+    TIMER_LIMITS.max,
+    TIMER_LIMITS.defaultValue
+  );
+  textAlign(CENTER, CENTER);
+
+  renderer.set(temporizador.estado_config, () => drawConfig(temporizador.configValue));
+  renderer.set(temporizador.estado_armed, () => drawArmed(temporizador.remainingSeconds, temporizador.totalSeconds));
+  renderer.set(temporizador.estado_timeout, () => drawTimeout());
+  
+   port = createSerial();
+    connectBtn = createButton('Connect to micro:bit');
+    connectBtn.position(width-(width/2), height-(height/10));
+    connectBtn.mousePressed(connectBtnClick);
+}
+
+function draw() {
+  temporizador.update();
+  renderer.get(temporizador.currentState)?.();
+  
+      if(port.availableBytes() > 0){
+        let dataRx = port.read(1);
+        if(dataRx == 'A'){
+            temporizador.postEvent("A");
+        }
+        else if(dataRx == 'B'){
+            temporizador.postEvent("B");
+        }
+        else if(dataRx == 'S'){
+            temporizador.postEvent("S");
+        }
+    }
+
+
+    if (!port.opened()) {
+        connectBtn.html('Connect to micro:bit');
+    }
+    else {
+        connectBtn.html('Disconnect');
+    }
+}
+
+function drawConfig(val) {
+  background(20, 40, 80);
+  fill(255);
+  textSize(120);
+  text(val, width / 2, height / 2);
+  textSize(18);
+  fill(200);
+  text("A(-) B(+) S(start)", width / 2, height / 2 + 100);
+  
+}
+
+function drawArmed(val, total) {
+  background(20, 20, 20);
+  let pulse = sin(frameCount * 0.1) * 10;
+
+  noFill();
+  strokeWeight(20);
+  stroke(255, 100, 0, 50);
+  ellipse(width / 2, height / 2, 250);
+
+  stroke(255, 150, 0);
+  let angle = map(val, 0, total, 0, TWO_PI);
+  arc(width / 2, height / 2, 250, 250, -HALF_PI, angle - HALF_PI);
+
+  fill(255);
+  noStroke();
+  textSize(100 + pulse);
+  text(val, width / 2, height / 2);
+  
+ 
+}
+
+function drawTimeout() {
+  let bg = frameCount % 20 < 10 ? color(150, 0, 0) : color(255, 0, 0);
+  background(bg);
+  fill(255);
+  textSize(100);
+  text("¡TIEMPO!", width / 2, height / 2);
+}
+
+function keyPressed() {
+  if (key === "a" || key === "A") temporizador.postEvent("A");
+  if (key === "b" || key === "B") temporizador.postEvent("B");
+  if (key === "s" || key === "S") temporizador.postEvent("S");
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+function connectBtnClick() {
+    if (!port.opened()) {
+        port.open('MicroPython', 115200);
+    } else {
+        port.close();
+    }
+}
+```
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
