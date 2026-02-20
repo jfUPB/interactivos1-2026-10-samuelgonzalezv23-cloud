@@ -6,6 +6,27 @@
 
 
 ### Actividad 3
+
+Micro:bit 
+```
+from microbit import *
+
+uart.init(baudrate=115200)
+display.show(Image.BUTTERFLY)
+
+while True:
+    if button_a.was_pressed():
+        uart.write('A')
+        sleep(500)
+    if button_b.was_pressed():
+        uart.write('B')
+        sleep(500)
+    if accelerometer.was_gesture('shake'):
+        uart.write('S')
+        sleep(500)
+    
+```
+
 fsm.js
 ```
 const ENTRY = "ENTRY";
@@ -372,4 +393,5 @@ function connectBtnClick() {
 
 
 ## Bitácora de reflexión
+
 
