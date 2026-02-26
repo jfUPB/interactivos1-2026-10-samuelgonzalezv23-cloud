@@ -7,26 +7,33 @@
 
 ### Actividad 3
 
-Micro:bit 
+
+## Bitácora de aplicación 
+
+### Actividad 4
+Index.html
 ```
-from microbit import *
-
-uart.init(baudrate=115200)
-display.show(Image.BUTTERFLY)
-
-while True:
-    if button_a.was_pressed():
-        uart.write('A')
-        sleep(500)
-    if button_b.was_pressed():
-        uart.write('B')
-        sleep(500)
-    if accelerometer.was_gesture('shake'):
-        uart.write('S')
-        sleep(500)
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/addons/p5.sound.min.js"></script>
+    <title>Sketch</title>
     
-```
+    
 
+    <link rel="stylesheet" type="text/css" href="style.css">
+<script src="https://unpkg.com/@gohai/p5.webserial@^1/libraries/p5.webserial.js"></script>
+  
+
+  <body>
+    <script src="fsm.js"></script>
+    <script src="sketch.js"></script>
+  </body>
+</html>
+```
 fsm.js
 ```
 const ENTRY = "ENTRY";
@@ -93,73 +100,7 @@ class FSMTask {
   }
 }
 ```
-Sketch.js    (CON FUNCONALIDAD DE MICRO:BIT Y NADA MÁS
-```
-const ENTRY = "ENTRY";
-const EXIT = "EXIT";
-
-class Timer {
-  constructor(owner, eventToPost, duration) {
-    this.owner = owner;
-    this.event = eventToPost;
-    this.duration = duration;
-    this.startTime = 0;
-    this.active = false;
-  }
-
-  start(newDuration = null) {
-    if (newDuration !== null) this.duration = newDuration;
-    this.startTime = millis();
-    this.active = true;
-  }
-
-  stop() {
-    this.active = false;
-  }
-
-  update() {
-    if (this.active && millis() - this.startTime >= this.duration) {
-      this.active = false;
-      this.owner.postEvent(this.event);
-    }
-  }
-}
-
-class FSMTask {
-  constructor() {
-    this.queue = [];
-    this.timers = [];
-    this.state = null;
-  }
-
-  postEvent(ev) {
-    this.queue.push(ev);
-  }
-
-  addTimer(event, duration) {
-    let t = new Timer(this, event, duration);
-    this.timers.push(t);
-    return t;
-  }
-
-  transitionTo(newState) {
-    if (this.state) this.state(EXIT);
-    this.state = newState;
-    this.state(ENTRY);
-  }
-
-  update() {
-    for (let t of this.timers) {
-      t.update();
-    }
-    while (this.queue.length > 0) {
-      let ev = this.queue.shift();
-      if (this.state) this.state(ev);
-    }
-  }
-}
-```
-Sketch.js primer intento de la clave ABA
+sketch.js
 ```
 const TIMER_LIMITS = {
   min: 15,
@@ -388,10 +329,8 @@ function connectBtnClick() {
     }
 }
 ```
-## Bitácora de aplicación 
-
-
 
 ## Bitácora de reflexión
+
 
 
