@@ -126,7 +126,6 @@ const UI = {
   helpText: 18,
 };
 
-
 class Temporizador extends FSMTask {
   constructor(minValue, maxValue, defaultValue) {
     super();
@@ -137,6 +136,7 @@ class Temporizador extends FSMTask {
     this.configValue = defaultValue;
     this.totalSeconds = defaultValue;
     this.remainingSeconds = defaultValue;
+    this.sequenceStep = 0
 
     this.myTimer = this.addTimer(EVENTS.TICK, 1000);
     this.transitionTo(this.estado_config);
@@ -146,24 +146,35 @@ class Temporizador extends FSMTask {
   get currentState() {
     return this.state;
   }
+  
+  compareKey(ev) {
+    if (ev !== EVENTS.DEC && ev !== EVENTS.INC) return false;
 
-  estado_config = (ev) => {
-    if (ev === ENTRY) {
-      this.configValue = this.defaultValue;
+    if (this.sequenceStep === 0 && ev === EVENTS.DEC) {
+      this.sequenceStep = 1;
+      return false;
     }
-    else if (ev === EVENTS.DEC) {
-      if (this.configValue > this.minValue) this.configValue--;
-    } else if (ev === EVENTS.INC) {
-      if (this.configValue < this.maxValue) this.configValue++;
-    } else if (ev === EVENTS.START) {
-      this.totalSeconds = this.configValue;
-      this.remainingSeconds = this.totalSeconds;
-      this.transitionTo(this.estado_armed);
+    if (this.sequenceStep === 1 && ev === EVENTS.INC) {
+      this.sequenceStep = 2;
+      return false;
     }
-  };
+    if (this.sequenceStep === 2 && ev === EVENTS.DEC) {
+      this.sequenceStep = 0; // reset
+      return true;           // secuencia completa
+    }
 
+    // cualquier otro evento DEC/INC fuera de orden reinicia secuencia
+    this.sequenceStep = 0;
+    return false;
+  }
 
   estado_armed = (ev) => {
+
+if (this.compareKey(ev)) {
+    this.transitionTo(this.estado_config);
+    return;
+  }
+
     if (ev === ENTRY) {
       this.myTimer.start();
     } else if (ev === EVENTS.TICK) {
@@ -176,22 +187,12 @@ class Temporizador extends FSMTask {
         }
       }
     }
-     if (this.queue.length === 3){
-       if (
-    this.queue[0] === EVENTS.DEC &&
-    this.queue[1] === EVENTS.INC &&
-    this.queue[2] === EVENTS.DEC
-  ){
-       this.transitionTo(this.estado_config)  
-       }
-
-       }
-
-       
+     
       else if (ev === EXIT) {
       this.myTimer.stop();
     }
       else if (ev === EVENTS.DEC) {
+        
       this.myTimer.stop()
       this.transitionTo(this.estado_paused);
     }
@@ -199,18 +200,24 @@ class Temporizador extends FSMTask {
   };
 
   estado_paused = (ev) => {
+
+if (this.compareKey(ev)) {
+    this.transitionTo(this.estado_config);
+    return;
+  }
+
     if (ev === ENTRY) {
       let tmp
+      
       tmp= this.remainingSeconds
       this.myTimer.stop()
       this.remainingSeconds=tmp;
     }
-    else if (ev === EVENTS.DEC) {
+    else if (ev === EVENTS.DEC || ev === EVENTS.INC) {
       this.transitionTo(this.estado_armed);
   }
-    else if(ev === EVENTS.INC) {
-      this.transitionTo(this.estado_armed);
-  }
+   
+    
   }
   
   estado_timeout = (ev) => {
@@ -221,7 +228,6 @@ class Temporizador extends FSMTask {
     }
   }
 }
-
 
 let temporizador;
 const renderer = new Map();
@@ -271,6 +277,10 @@ function draw() {
     }
 }
 
+
+
+
+
 function drawConfig(val) {
   background(20, 40, 80);
   fill(255);
@@ -303,6 +313,8 @@ function drawArmed(val, total) {
  
 }
 
+
+
 function drawTimeout() {
   let bg = frameCount % 20 < 10 ? color(150, 0, 0) : color(255, 0, 0);
   background(bg);
@@ -331,6 +343,7 @@ function connectBtnClick() {
 ```
 
 ## Bitácora de reflexión
+
 
 
 
