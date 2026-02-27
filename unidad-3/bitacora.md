@@ -167,6 +167,21 @@ class Temporizador extends FSMTask {
     this.sequenceStep = 0;
     return false;
   }
+  
+   estado_config = (ev) => {
+    if (ev === ENTRY) {
+      this.configValue = this.defaultValue;
+    }
+    else if (ev === EVENTS.DEC) {
+      if (this.configValue > this.minValue) this.configValue--;
+    } else if (ev === EVENTS.INC) {
+      if (this.configValue < this.maxValue) this.configValue++;
+    } else if (ev === EVENTS.START) {
+      this.totalSeconds = this.configValue;
+      this.remainingSeconds = this.totalSeconds;
+      this.transitionTo(this.estado_armed);
+    }
+  };
 
   estado_armed = (ev) => {
 
@@ -343,6 +358,7 @@ function connectBtnClick() {
 ```
 
 ## Bitácora de reflexión
+
 
 
 
