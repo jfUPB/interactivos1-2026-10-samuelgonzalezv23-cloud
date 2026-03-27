@@ -1,7 +1,7 @@
 # Unidad 5
 ## Bitácora de proceso de aprendizaje
 #### Actividad 1
-MicrobitBinary
+MicrobitBinaryAdapter
 ```
 const { SerialPort } = require("serialport");
 const BaseAdapter = require("./BaseAdapter");
