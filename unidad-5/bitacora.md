@@ -390,4 +390,11 @@ Efectivamente, nada es dibujado y la consola registra el error de checksum
 <img width="1306" height="726" alt="image" src="https://github.com/user-attachments/assets/d54c4ec7-d4c3-4745-926f-81d3b9c3b815" />
 
 
+Coloqué una linea para logear en consola los datos enviados y verificar que está correcto
+<img width="912" height="142" alt="image" src="https://github.com/user-attachments/assets/72dfb11b-687c-4802-9c96-adee60b8e566" />
+Y se pueden ver los datos
+<img width="1451" height="620" alt="image" src="https://github.com/user-attachments/assets/7b8b561f-7f44-4476-81d7-6bde6ae76168" />
+
+
+
 ## Bitácora de reflexión
