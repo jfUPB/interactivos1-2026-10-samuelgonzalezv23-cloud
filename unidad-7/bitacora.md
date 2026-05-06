@@ -7,10 +7,13 @@
 
 #### Actividad 2
 
-##### Configuración de Strudel para emisión de eventos
-Para que Strudel se comunicara con el sistema, se utilizó el Strudel REPL configurado para emitir eventos mediante el protocolo OSC (Open Sound Control).
-Se direccionaron los mensajes al puerto local del bridgeServer.js.
-Se definieron patrones rítmicos que envían datos específicos por cada "hit": nombre del sonido (s), duración (delta) y parámetros adicionales como la ganancia o el paneo.
+##### Configuración de Open stage control
+
+Se configuró el envío de datos al puerto 9000
+
+##### Elección de widgets.
+
+Elegí tres widgets sencillos. un Botón para realizar una acción binaria mediante un bool, y un knob y un fader para enviar dos datos continuos dentro de un rango.
 
 ##### Estructura de Mensaje 
 ```
