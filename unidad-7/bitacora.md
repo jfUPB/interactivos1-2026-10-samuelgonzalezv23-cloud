@@ -2,6 +2,19 @@
 
 ## Bitácora de proceso de aprendizaje
 
+#### Actividad 1
+
+##### DIferencia entre mensaje músical y de control
+Un evento muscial un suceso puntual que tiene una fecha de ejecución específica definida por un timestamp.
+un mensaje de control es una señal de flujo continuo que modifica el estado global. No tiene una duración, sino que altera las reglas.
+
+##### Persistencia
+Un parámetro es persistente cuando su valor se mantiene guardado en la memoria del programa independientemente de lo que ocurra con la fuente de datos.
+En mi código, globalConfig es un contenedor de datos persistentes
+
+##### ¿que se mantuvo igual?
+
+La Lógica de la Cola temporal, El ciclo de vida de animaciones, La Clase Timer y FSMTask.
 
 ## Bitácora de aplicación 
 
