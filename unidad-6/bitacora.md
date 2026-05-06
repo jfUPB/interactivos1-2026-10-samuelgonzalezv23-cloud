@@ -2,6 +2,13 @@
 
 ## Bitácora de proceso de aprendizaje
 
+#### Actividad 1
+
+##### Diferencia entre recibir y ejecutar mensaje. 
+
+##### Razones para timestam. Está en la palabra, es un sistema audiovisual. El audio y el video son dos componentes muy diferentes regidos por distinta lógica que deben estar al unísono, el timestamp le dice a ambos sistemas cuando deben mostrar sus actualizaciones para no perder la sincronización.
+
+##### La clase maestra de los adapters, el bridge ahora solo tiene que cambiar ligeramente para acomodar el nuevo adaptador, el cliente y las visuales ahora tienen que recibir un tipo de dato nuevo.
 
 ## Bitácora de aplicación 
 
